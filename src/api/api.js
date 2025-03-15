@@ -1,10 +1,12 @@
 import axios from 'axios';
 import NetInfo from '@react-native-community/netinfo';
+import {BASE_URL} from '../config/app';
 
-const BASE_URL = 'http://192.168.31.112:8000/api'; // Replace with your API URL
+
+// const BASE_URL = 'http://ip-address:8000/api';
 
 // Create Axios instance
-const api = axios.create({
+const axiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
   headers: {
@@ -20,7 +22,7 @@ const isInternetAvailable = async () => {
 };
 
 // Request Interceptor (Check Internet & Attach Token)
-api.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   async config => {
     const isConnected = await isInternetAvailable();
 
@@ -44,7 +46,7 @@ api.interceptors.request.use(
 );
 
 // Response Interceptor (Handle Errors)
-api.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   response => response,
   error => {
     if (error.response) {
@@ -120,4 +122,4 @@ api.interceptors.response.use(
   },
 );
 
-export default api;
+export default axiosInstance;

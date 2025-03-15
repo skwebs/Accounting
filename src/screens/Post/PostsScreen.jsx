@@ -9,7 +9,6 @@ import {
   Pressable,
 } from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-// import {fetchPosts, deletePost} from '../../api/posts';
 import PostItem from '../../components/PostItem';
 import Loading from '../../components/Loading';
 import NetworkStatusChecker from '../../components/NetworkStatusChecker';
@@ -38,11 +37,13 @@ const PostsScreen = ({navigation}) => {
   const loadPosts = useCallback(async () => {
     setIsLoading(true);
     try {
-      // const data2 = await fetchPosts();
       const {data} = await PostService.getPosts();
       setPosts(data.data);
       console.log(data.data);
     } catch (error) {
+      if (error.type === 'network') {
+        Alert.alert('Network Error', error.message);
+      }
       console.log(JSON.stringify(error));
     } finally {
       setIsLoading(false);
