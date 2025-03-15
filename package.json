@@ -4,14 +4,35 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "android:arch": "react-native run-android  --active-arch-only",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "apk": "cd android && gradlew.bat assembleRelease",
+    "clean": "cd android && gradlew.bat clean",
+    "build:clean": "cd android && gradlew.bat clean && gradlew.bat assembleRelease",
+    "kill": "npx kill-port 8081",
+    "kill:start": "npx kill-port 8081 && npx react-native start",
+    "start:reset": "npx react-native start --reset-cache",
+    "kill:start:reset":" npx kill-port 8081 && npx react-native start --reset-cache",
+    "start:reset:clean": "npx react-native start --reset-cache && cd android && gradlew.bat clean && gradlew.bat assembleRelease",
+    "build:aab": "cd android && gradlew.bat clean && cd ../ && npx react-native build-android --mode=release"
   },
   "dependencies": {
+    "@react-native-community/netinfo": "^11.4.1",
+    "@react-navigation/native": "^7.0.15",
+    "@react-navigation/native-stack": "^7.2.1",
+    "@react-navigation/stack": "^7.1.2",
+    "axios": "^1.8.1",
     "react": "19.0.0",
-    "react-native": "0.78.0"
+    "react-native": "0.78.0",
+    "react-native-dotenv": "^3.4.11",
+    "react-native-gesture-handler": "^2.24.0",
+    "react-native-modal": "^14.0.0-rc.0",
+    "react-native-safe-area-context": "^5.2.0",
+    "react-native-screens": "^4.9.1",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
