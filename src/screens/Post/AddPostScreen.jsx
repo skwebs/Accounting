@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, TextInput, Alert} from 'react-native';
+import {View, TextInput, Alert} from 'react-native';
 import Loading from '../../components/Loading';
 import {Text} from 'react-native-gesture-handler';
 import PressableButton from '../../components/PressableButton';
 import PostService from '../../services/postService';
 import NetworkStatusChecker from '../../components/NetworkStatusChecker';
+import styles from '../../styles/screensStyles/PostStyles/AddPostScreenStyles';
 
 const AddPostScreen = ({navigation}) => {
   const [title, setTitle] = useState('');
@@ -85,45 +86,3 @@ const AddPostScreen = ({navigation}) => {
 };
 
 export default AddPostScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#eee',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  formContainer: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#008080',
-  },
-  titleInput: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    marginTop: 10,
-    marginBottom: 2,
-  },
-  contentInput: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    marginTop: 10,
-    marginBottom: 2,
-    height: 110,
-    textAlignVertical: 'top',
-  },
-  error: {
-    color: 'red',
-  },
-  buttonContainer: {
-    marginTop: 20,
-  },
-});

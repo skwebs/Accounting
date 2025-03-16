@@ -1,4 +1,4 @@
-import {Alert, Button, Linking, StyleSheet, Text, View} from 'react-native';
+import {Alert, Button, Linking} from 'react-native';
 import React, {useCallback} from 'react';
 
 const SendIntentButton = ({action, extras, children}) => {
@@ -14,5 +14,3 @@ const SendIntentButton = ({action, extras, children}) => {
 };
 
 export default SendIntentButton;
-
-const styles = StyleSheet.create({});

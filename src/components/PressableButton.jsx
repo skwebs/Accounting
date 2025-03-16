@@ -1,5 +1,6 @@
 import React, {useRef} from 'react';
-import {Pressable, Text, Animated, StyleSheet} from 'react-native';
+import {Pressable, Text, Animated} from 'react-native';
+import styles from '../styles/compStyles/PressableButtonStyles';
 
 const PressableButton = ({
   title,
@@ -37,24 +38,5 @@ const PressableButton = ({
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
 
 export default PressableButton;

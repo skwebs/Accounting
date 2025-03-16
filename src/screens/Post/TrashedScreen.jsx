@@ -4,15 +4,15 @@ import {
   FlatList,
   Alert,
   TouchableOpacity,
-  StyleSheet,
   Text,
   Pressable,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Loading from '../../components/Loading';
 import TrashedPostItem from '../../components/TrashedPostItem';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView} from 'react-native-safe-area-context';
 import PostService from '../../services/postService';
+import styles from '../../styles/screensStyles/PostStyles/TrashedScreenStyles';
 
 function EmptyListCustomComponent() {
   const navigation = useNavigation();
@@ -167,7 +167,7 @@ const TrashedScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaProvider>
+    <>
       <SafeAreaView style={styles.container}>
         <View style={styles.contentWrapper}>
           {restoring && <Loading text="Restoring..." />}
@@ -208,80 +208,8 @@ const TrashedScreen = ({navigation}) => {
           )}
         </View>
       </SafeAreaView>
-    </SafeAreaProvider>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // marginTop: StatusBar.currentHeight || 0,
-  },
-
-  // Wrapper for the entire screen content
-  contentWrapper: {
-    width: '100%',
-    flex: 1,
-    position: 'relative',
-  },
-
-  // Action buttons container
-  actionButtonsContainer: {
-    flexDirection: 'row',
-  },
-
-  // General action button styling
-  actionButton: {
-    padding: 20,
-    width: '50%',
-  },
-
-  // Text inside action buttons
-  actionButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-
-  // Delete button with red background
-  deleteButton: {
-    backgroundColor: 'red',
-  },
-
-  // Restore button with green background
-  restoreButton: {
-    backgroundColor: 'green',
-  },
-
-  // Container for empty list message
-  emptyContainer: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  // Message text when no trashed posts are available
-  emptyText: {
-    fontSize: 16,
-    color: 'gray',
-  },
-
-  // Go Back button inside EmptyListCustomComponent
-  emptyButton: {
-    marginTop: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    borderRadius: 5,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-
-  // Text inside Go Back button
-  emptyButtonText: {
-    color: 'gray',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
 
 export default TrashedScreen;

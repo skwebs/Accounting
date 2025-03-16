@@ -1,13 +1,12 @@
 import axios from 'axios';
 import NetInfo from '@react-native-community/netinfo';
-import {BASE_URL} from '../config/app';
+import {API_BASE_URL} from '@env';
 
-
-// const BASE_URL = 'http://ip-address:8000/api';
+// const API_BASE_URL = 'http://ip-address:8000/api';
 
 // Create Axios instance
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -101,7 +100,15 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    if (error.message.includes('Network Error') || !error.response) {
+    // if (error.message?.includes('Network Error') || !error.response) {
+    //   return Promise.reject({
+    //     type: 'network',
+    //     message: 'No internet connection.',
+    //   });
+    // }
+
+    if (error.message?.includes('Network Error') || !error.response) {
+      console.log('Network Error:', error.message);
       return Promise.reject({
         type: 'network',
         message: 'No internet connection.',

@@ -1,11 +1,10 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   View,
   FlatList,
   Alert,
   TouchableOpacity,
   Text,
-  StyleSheet,
   Pressable,
 } from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
@@ -14,7 +13,8 @@ import Loading from '../../components/Loading';
 import NetworkStatusChecker from '../../components/NetworkStatusChecker';
 import useNetworkStore from '../../store/networkStore';
 import PostService from '../../services/postService';
-
+import {SafeAreaView} from 'react-native-safe-area-context';
+import styles from '../../styles/screensStyles/PostStyles/PostsScreenStyles';
 function EmptyListCustomComponent() {
   const navigation = useNavigation();
   return (
@@ -55,6 +55,9 @@ const PostsScreen = ({navigation}) => {
       isConnected && loadPosts();
     }, [loadPosts, isConnected]),
   );
+  // useEffect(() => {
+  //   loadPosts();
+  // }, [loadPosts]);
 
   const handleDeletePost = id => {
     Alert.alert(
@@ -86,103 +89,45 @@ const PostsScreen = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <NetworkStatusChecker />
+    <>
+      <SafeAreaView style={styles.container}>
+        <NetworkStatusChecker />
 
-      <View style={styles.listContainer}>
-        {isLoading ? (
-          <Loading text="Loading posts..." />
-        ) : (
-          <FlatList
-            data={posts}
-            keyExtractor={item => item.id.toString()}
-            renderItem={({item}) => (
-              <PostItem
-                item={item}
-                onEdit={() => navigation.navigate('EditPost', {id: item.id})}
-                onDelete={() => handleDeletePost(item.id)}
-              />
-            )}
-            ListEmptyComponent={<EmptyListCustomComponent />}
-            onRefresh={loadPosts}
-            refreshing={isLoading}
-          />
-        )}
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('TrashedPost')}
-          style={[styles.button, styles.trashedButton]}>
-          <Text style={styles.buttonText}>Trashed Post</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('AddPost')}
-          style={[styles.button, styles.addButton]}>
-          <Text style={styles.buttonText}>Add Post</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+        <View style={styles.listContainer}>
+          {isLoading ? (
+            <Loading text="Loading posts..." />
+          ) : (
+            <FlatList
+              data={posts}
+              keyExtractor={item => item.id.toString()}
+              renderItem={({item}) => (
+                <PostItem
+                  item={item}
+                  onEdit={() => navigation.navigate('EditPost', {id: item.id})}
+                  onDelete={() => handleDeletePost(item.id)}
+                />
+              )}
+              ListEmptyComponent={<EmptyListCustomComponent />}
+              onRefresh={loadPosts}
+              refreshing={isLoading}
+            />
+          )}
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('TrashedPost')}
+            style={[styles.button, styles.trashedButton]}>
+            <Text style={styles.buttonText}>Trashed Post</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('AddPost')}
+            style={[styles.button, styles.addButton]}>
+            <Text style={styles.buttonText}>Add Post</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    position: 'relative',
-  },
-  listContainer: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-  },
-  button: {
-    padding: 20,
-    width: '50%',
-    alignItems: 'center',
-  },
-  trashedButton: {
-    backgroundColor: 'darkgrey',
-  },
-  addButton: {
-    backgroundColor: 'green',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-
-  // Container for empty list message
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-
-  // Message text when no trashed posts are available
-  emptyText: {
-    fontSize: 16,
-    color: 'gray',
-  },
-
-  // Go Back button inside EmptyListCustomComponent
-  emptyButton: {
-    marginTop: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    borderRadius: 5,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-
-  // Text inside Go Back button
-  emptyButtonText: {
-    color: 'gray',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
 
 export default PostsScreen;

@@ -15,7 +15,7 @@
     "kill": "npx kill-port 8081",
     "kill:start": "npx kill-port 8081 && npx react-native start",
     "start:reset": "npx react-native start --reset-cache",
-    "kill:start:reset":" npx kill-port 8081 && npx react-native start --reset-cache",
+    "kill:start:reset": " npx kill-port 8081 && npx react-native start --reset-cache",
     "start:reset:clean": "npx react-native start --reset-cache && cd android && gradlew.bat clean && gradlew.bat assembleRelease",
     "build:aab": "cd android && gradlew.bat clean && cd ../ && npx react-native build-android --mode=release"
   },
@@ -27,7 +27,6 @@
     "axios": "^1.8.1",
     "react": "19.0.0",
     "react-native": "0.78.0",
-    "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "^2.24.0",
     "react-native-modal": "^14.0.0-rc.0",
     "react-native-safe-area-context": "^5.2.0",
@@ -51,6 +50,7 @@
     "eslint": "^8.19.0",
     "jest": "^29.6.3",
     "prettier": "2.8.8",
+    "react-native-dotenv": "^3.4.11",
     "react-test-renderer": "19.0.0",
     "typescript": "5.0.4"
   },
