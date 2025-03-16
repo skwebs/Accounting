@@ -1,10 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, TextInput, StyleSheet, Text, Alert} from 'react-native';
+import {View, TextInput, Text, Alert} from 'react-native';
 
 import Loading from '../../components/Loading';
 import PressableButton from '../../components/PressableButton';
 import PostService from '../../services/postService';
 import NetworkStatusChecker from '../../components/NetworkStatusChecker';
+import styles from '../../styles/screensStyles/PostStyles/EditPostScreenStyles';
 
 const EditPostScreen = ({route, navigation}) => {
   const [title, setTitle] = useState('');
@@ -99,35 +100,5 @@ const EditPostScreen = ({route, navigation}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#eee',
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  contentContainer: {
-    padding: 20,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#008080',
-  },
-  input: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  contentInput: {
-    height: 110,
-    textAlignVertical: 'top',
-  },
-});
 
 export default EditPostScreen;
