@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   FlatList,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
   Pressable,
+  StyleSheet,
 } from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import PostItem from '../../components/PostItem';
@@ -14,7 +15,14 @@ import NetworkStatusChecker from '../../components/NetworkStatusChecker';
 import useNetworkStore from '../../store/networkStore';
 import PostService from '../../services/postService';
 import {SafeAreaView} from 'react-native-safe-area-context';
+
+import LinearGradient from 'react-native-linear-gradient';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
 import styles from '../../styles/screensStyles/PostStyles/PostsScreenStyles';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+
 function EmptyListCustomComponent() {
   const navigation = useNavigation();
   return (
@@ -28,6 +36,46 @@ function EmptyListCustomComponent() {
     </View>
   );
 }
+
+const ItemSeparator = () => (
+  <>
+    <View style={styles.separator} />
+  </>
+);
+
+const shimmerColors = ['#e0e0e0', '#f5f5f5', '#e0e0e0'];
+const PostShimmer = () => {
+  return (
+    <View style={sStyles.container}>
+      <ShimmerPlaceholder
+        shimmerColors={shimmerColors}
+        style={sStyles.smallShimmer}
+      />
+      <ShimmerPlaceholder
+        shimmerColors={shimmerColors}
+        style={sStyles.largeShimmer}
+      />
+      <ShimmerPlaceholder
+        shimmerColors={shimmerColors}
+        style={sStyles.largeShimmer}
+      />
+      <ShimmerPlaceholder
+        shimmerColors={shimmerColors}
+        style={sStyles.largeShimmer}
+      />
+      <View style={sStyles.row}>
+        <ShimmerPlaceholder
+          shimmerColors={['#e0e0e0', '#f5f5f5', '#e0e0e0']}
+          style={sStyles.mediumShimmer}
+        />
+        <ShimmerPlaceholder
+          shimmerColors={shimmerColors}
+          style={sStyles.mediumShimmer}
+        />
+      </View>
+    </View>
+  );
+};
 
 const PostsScreen = ({navigation}) => {
   const [posts, setPosts] = useState([]);
@@ -95,11 +143,32 @@ const PostsScreen = ({navigation}) => {
 
         <View style={styles.listContainer}>
           {isLoading ? (
-            <Loading text="Loading posts..." />
+            // <Loading text="Loading posts..." />
+            <FlatList
+              data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+              ItemSeparatorComponent={ItemSeparator}
+              renderItem={({item, index}) => (
+                <View style={{paddingHorizontal: 10}}>
+                  <View
+                    style={[
+                      {
+                        backgroundColor: 'white',
+                        padding: 10,
+                        borderRadius: 10,
+                        borderWidth: 1,
+                        borderColor: '#dfdfdf',
+                      },
+                    ]}>
+                    <PostShimmer />
+                  </View>
+                </View>
+              )}
+            />
           ) : (
             <FlatList
               data={posts}
               keyExtractor={item => item.id.toString()}
+              ItemSeparatorComponent={ItemSeparator} // Pass it as a reference
               renderItem={({item}) => (
                 <PostItem
                   item={item}
@@ -131,3 +200,34 @@ const PostsScreen = ({navigation}) => {
 };
 
 export default PostsScreen;
+
+const sStyles = StyleSheet.create({
+  container: {
+    gap: 5,
+    width: '100%',
+  },
+  smallShimmer: {
+    width: '10%',
+    height: 20,
+    borderRadius: 5,
+    backgroundColor: '#e0e0e0',
+  },
+  largeShimmer: {
+    width: '80%',
+    height: 20,
+    borderRadius: 5,
+    backgroundColor: '#e0e0e0',
+  },
+  row: {
+    gap: 10,
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  mediumShimmer: {
+    flex: 1,
+    height: 40,
+    backgroundColor: '#e0e0e0',
+  },
+});

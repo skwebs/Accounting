@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  separator: {height: 10},
 });
 
 export default styles;
