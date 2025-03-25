@@ -6,6 +6,7 @@ import PressableButton from '../../components/PressableButton';
 import PostService from '../../services/postService';
 import NetworkStatusChecker from '../../components/NetworkStatusChecker';
 import styles from '../../styles/screensStyles/PostStyles/AddPostScreenStyles';
+import {Toast} from 'react-native-simple-toast';
 
 const AddPostScreen = ({navigation}) => {
   const [title, setTitle] = useState('');
@@ -35,7 +36,8 @@ const AddPostScreen = ({navigation}) => {
         Alert.alert('Validation Error', error.message);
         console.log('find validation Error', error.errors);
       } else if (error.type === 'network') {
-        Alert.alert('Network Error', error.message);
+        // Alert.alert('Network Error', error.message);
+        Toast.show(error.message, Toast.LONG);
       }
 
       console.log('Error adding post:', error);

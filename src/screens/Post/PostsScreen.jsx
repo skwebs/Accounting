@@ -21,6 +21,7 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 import styles from '../../styles/screensStyles/PostStyles/PostsScreenStyles';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import Toast from 'react-native-simple-toast';
 
 function EmptyListCustomComponent() {
   const navigation = useNavigation();
@@ -90,7 +91,8 @@ const PostsScreen = ({navigation}) => {
       console.log(data.data);
     } catch (error) {
       if (error.type === 'network') {
-        Alert.alert('Network Error', error.message);
+        // Alert.alert('Network Error', error.message);
+        Toast.show(error.message, Toast.LONG);
       }
       console.log(JSON.stringify(error));
     } finally {
@@ -98,11 +100,11 @@ const PostsScreen = ({navigation}) => {
     }
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      isConnected && loadPosts();
-    }, [loadPosts, isConnected]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     isConnected && loadPosts();
+  //   }, [loadPosts, isConnected]),
+  // );
   useEffect(() => {
     setIsLoading(false);
     loadPosts();
@@ -121,13 +123,22 @@ const PostsScreen = ({navigation}) => {
             setIsLoading(true);
             try {
               const res = await PostService.deletePost(id);
+              if (res.status === 200) {
+                // Alert.alert('Success', 'Post deleted successfully.');
+                Toast.show('Post deleted successfully.', Toast.LONG, {
+                  backgroundColor: 'green',
+                });
+              }
               console.log(res);
               await loadPosts();
             } catch (error) {
-              Alert.alert(
-                'Error',
-                error.message || 'Failed to delete the post.',
-              );
+              // Alert.alert(
+              //   'Error',
+              //   error.message || 'Failed to delete the post.',
+              // );
+              Toast.show('Failed to delete the post.', Toast.LONG, {
+                backgroundColor: 'red',
+              });
             } finally {
               setIsLoading(false);
             }

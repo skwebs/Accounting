@@ -6,6 +6,8 @@ import PressableButton from '../../components/PressableButton';
 import PostService from '../../services/postService';
 import NetworkStatusChecker from '../../components/NetworkStatusChecker';
 import styles from '../../styles/screensStyles/PostStyles/EditPostScreenStyles';
+import Snackbar from 'react-native-snackbar';
+import Toast from 'react-native-simple-toast';
 
 const EditPostScreen = ({route, navigation}) => {
   const [title, setTitle] = useState('');
@@ -46,7 +48,14 @@ const EditPostScreen = ({route, navigation}) => {
     try {
       const res = await PostService.updatePost(id, {title, content});
       if (res.status === 200) {
-        Alert.alert('Success', 'Post updated successfully.');
+        // Alert.alert('Success', 'Post updated successfully.');
+        // Snackbar.show({
+        //   text: 'Post updated successfully.',
+        //   duration: Snackbar.LENGTH_SHORT,
+        //   // backgroundColor: 'green',
+        // });
+
+        Toast.show('Post updated successfully.', Toast.LONG);
       }
       console.log(res);
       setIsUpdating(false);

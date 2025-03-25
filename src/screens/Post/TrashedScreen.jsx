@@ -10,9 +10,10 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import Loading from '../../components/Loading';
 import TrashedPostItem from '../../components/TrashedPostItem';
-import { SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import PostService from '../../services/postService';
 import styles from '../../styles/screensStyles/PostStyles/TrashedScreenStyles';
+import Toast from 'react-native-simple-toast';
 
 function EmptyListCustomComponent() {
   const navigation = useNavigation();
@@ -44,12 +45,14 @@ const TrashedScreen = ({navigation}) => {
     } catch (error) {
       console.log(error);
       if (error.type === 'network') {
-        Alert.alert('Network Error', 'Please check your internet connection.');
+        // Alert.alert('Network Error', 'Please check your internet connection.');
+        Toast.show('Please check your internet connection.', Toast.LONG);
         navigation.goBack();
       } else if (error.type === 'not_found') {
         setPosts([]);
       } else {
-        Alert.alert('Error', 'Failed to fetch posts.');
+        // Alert.alert('Error', 'Failed to fetch posts.');
+        Toast.show('Failed to fetch posts.', Toast.LONG);
       }
     } finally {
       setIsLoading(false);
@@ -73,9 +76,13 @@ const TrashedScreen = ({navigation}) => {
               await fetchPosts();
             } catch (error) {
               if (error.type === 'network') {
-                Alert.alert(
-                  'Network Error',
+                // Alert.alert(
+                //   'Network Error',
+                //   'Please check your internet connection.',
+                // );
+                Toast.show(
                   'Please check your internet connection.',
+                  Toast.LONG,
                 );
               } else {
                 Alert.alert('Error', 'Failed to fetch posts.');
