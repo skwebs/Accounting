@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   View,
   FlatList,
@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import PostItem from '../../components/PostItem';
-import Loading from '../../components/Loading';
 import NetworkStatusChecker from '../../components/NetworkStatusChecker';
 import useNetworkStore from '../../store/networkStore';
 import PostService from '../../services/postService';
@@ -79,7 +78,8 @@ const PostShimmer = () => {
 
 const PostsScreen = ({navigation}) => {
   const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   const isConnected = useNetworkStore(state => state.isConnected);
 
   const loadPosts = useCallback(async () => {
@@ -103,9 +103,10 @@ const PostsScreen = ({navigation}) => {
       isConnected && loadPosts();
     }, [loadPosts, isConnected]),
   );
-  // useEffect(() => {
-  //   loadPosts();
-  // }, [loadPosts]);
+  useEffect(() => {
+    setIsLoading(false);
+    loadPosts();
+  }, [loadPosts]);
 
   const handleDeletePost = id => {
     Alert.alert(
@@ -140,31 +141,8 @@ const PostsScreen = ({navigation}) => {
     <>
       <SafeAreaView style={styles.container}>
         <NetworkStatusChecker />
-
-        <View style={styles.listContainer}>
-          {isLoading ? (
-            // <Loading text="Loading posts..." />
-            <FlatList
-              data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-              ItemSeparatorComponent={ItemSeparator}
-              renderItem={({item, index}) => (
-                <View style={{paddingHorizontal: 10}}>
-                  <View
-                    style={[
-                      {
-                        backgroundColor: 'white',
-                        padding: 10,
-                        borderRadius: 10,
-                        borderWidth: 1,
-                        borderColor: '#dfdfdf',
-                      },
-                    ]}>
-                    <PostShimmer />
-                  </View>
-                </View>
-              )}
-            />
-          ) : (
+        {!isLoading && posts?.length > 0 ? (
+          <View style={styles.listContainer}>
             <FlatList
               data={posts}
               keyExtractor={item => item.id.toString()}
@@ -180,8 +158,30 @@ const PostsScreen = ({navigation}) => {
               onRefresh={loadPosts}
               refreshing={isLoading}
             />
-          )}
-        </View>
+          </View>
+        ) : (
+          <FlatList
+            data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+            ItemSeparatorComponent={ItemSeparator}
+            renderItem={() => (
+              <View style={{paddingHorizontal: 10}}>
+                <View
+                  style={[
+                    {
+                      backgroundColor: 'white',
+                      padding: 10,
+                      borderRadius: 10,
+                      borderWidth: 1,
+                      borderColor: '#dfdfdf',
+                    },
+                  ]}>
+                  <PostShimmer />
+                </View>
+              </View>
+            )}
+          />
+        )}
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={() => navigation.navigate('TrashedPost')}
