@@ -1,59 +1,61 @@
+// import React, {useEffect} from 'react';
+// import {listenForNetworkChanges} from './store/networkStore';
+// import {SafeAreaProvider} from 'react-native-safe-area-context';
+// import {StatusBar} from 'react-native';
+// import StackNavigator from './navigation/stack/StackNavigator';
+// import BottomTabNavigator from './navigation/bottom-tab/BottomTabNavigator';
+
+// const App = () => {
+//   useEffect(() => {
+//     listenForNetworkChanges(); // Start network status monitoring
+//   }, []);
+
+//   return (
+//     <>
+//       <StatusBar barStyle="dark-content" backgroundColor={'#fff'} />
+//       <SafeAreaProvider>
+//         {/* <StackNavigator /> */}
+//         <BottomTabNavigator />
+//       </SafeAreaProvider>
+//     </>
+//   );
+// };
+
+// export default App;
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import PostsScreen from './screens/Post/PostsScreen';
-import AddPostScreen from './screens/Post/AddPostScreen';
-import EditPostScreen from './screens/Post/EditPostScreen';
-// import HomeScreen from './HomeScreen';
-import TrashedScreen from './screens/Post/TrashedScreen';
-import {listenForNetworkChanges} from './store/networkStore';
-import HomeScreen from './screens/HomeScreen';
+import {
+  listenForNetworkChanges,
+  removeNetworkListener,
+} from './store/networkStore';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {StatusBar} from 'react-native';
-
-const Stack = createStackNavigator();
+import {StatusBar, Platform} from 'react-native';
+import StackNavigator from './navigation/stack/StackNavigator';
+import BottomTabNavigator from './navigation/bottom-tab/BottomTabNavigator';
 
 const App = () => {
   useEffect(() => {
     listenForNetworkChanges(); // Start network status monitoring
+
+    // Set StatusBar background color (Android-specific)
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor('#fff');
+    }
+
+    return () => {
+      removeNetworkListener(); // Cleanup network listener
+    };
   }, []);
 
   return (
-    <>
-      <StatusBar barStyle="dark-content" backgroundColor={'#fff'} />
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Posts">
-            <Stack.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{title: 'Home'}}
-            />
-            <Stack.Screen
-              name="Posts"
-              component={PostsScreen}
-              options={{title: 'Posts'}}
-            />
-            <Stack.Screen
-              name="AddPost"
-              component={AddPostScreen}
-              options={{title: 'Add Post'}}
-            />
-            <Stack.Screen
-              name="EditPost"
-              component={EditPostScreen}
-              options={{title: 'Edit Post'}}
-            />
-            <Stack.Screen
-              name="TrashedPost"
-              component={TrashedScreen}
-              options={{title: 'Trashed Posts'}}
-            />
-            {/* added */}
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </>
+    <SafeAreaProvider>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <NavigationContainer>
+        {/* Choose either StackNavigator or BottomTabNavigator, or conditionally render */}
+        <BottomTabNavigator />
+        {/* <StackNavigator /> */}
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 
