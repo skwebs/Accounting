@@ -30,7 +30,7 @@ import {
 } from './store/networkStore';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {StatusBar, Platform} from 'react-native';
-import StackNavigator from './navigation/stack/StackNavigator';
+// import StackNavigator from './navigation/stack/StackNavigator';
 import BottomTabNavigator from './navigation/bottom-tab/BottomTabNavigator';
 
 const App = () => {

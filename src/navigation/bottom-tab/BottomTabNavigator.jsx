@@ -18,7 +18,7 @@ const BottomTabNavigator = () => {
   return (
     <Bottom.Navigator
       screenOptions={{
-        headerShown: false,
+        // headerShown: false,
         // if you want to change the active tab color
         tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: Colors.secondary,
@@ -30,18 +30,18 @@ const BottomTabNavigator = () => {
         tabBarLabelStyle: {
           fontSize: 12,
         },
-        tabBarStyle: {
-          backgroundColor: 'white',
-        },
-        headerStyle: {
-          backgroundColor: Colors.primary,
-        },
-        headerTitleStyle: {
-          color: 'white',
-        },
-        headerTitleAlign: 'center',
-        headerTintColor: 'white',
-        tabBarShowLabel: true,
+        // tabBarStyle: {
+        //   backgroundColor: 'white',
+        // },
+        // headerStyle: {
+        //   backgroundColor: Colors.primary,
+        // },
+        // headerTitleStyle: {
+        //   color: 'white',
+        // },
+        // headerTitleAlign: 'center',
+        // headerTintColor: 'white',
+        // tabBarShowLabel: true,
         tabBarHideOnKeyboard: true,
         tabBarLabelPosition: 'below-icon',
       }}>
@@ -63,7 +63,7 @@ const BottomTabNavigator = () => {
         name="Settings"
         component={SettingsTab}
         options={{
-          headerShown: false,
+          // headerShown: false,
           tabBarIcon: ({focused, color, size}) =>
             TabIcon({
               size,
