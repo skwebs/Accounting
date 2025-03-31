@@ -30,8 +30,9 @@ import {
 } from './store/networkStore';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {StatusBar, Platform} from 'react-native';
-// import StackNavigator from './navigation/stack/StackNavigator';
 import BottomTabNavigator from './navigation/bottom-tab/BottomTabNavigator';
+import StackNavigator from './navigation/stack/StackNavigator';
+import AuthStackNavigator from './navigation/stack/AuthStackNavigator';
 
 const App = () => {
   useEffect(() => {
@@ -52,8 +53,9 @@ const App = () => {
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <NavigationContainer>
         {/* Choose either StackNavigator or BottomTabNavigator, or conditionally render */}
-        <BottomTabNavigator />
+        <AuthStackNavigator />
         {/* <StackNavigator /> */}
+        {/* <BottomTabNavigator /> */}
       </NavigationContainer>
     </SafeAreaProvider>
   );

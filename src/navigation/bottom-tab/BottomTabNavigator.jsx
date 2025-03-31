@@ -5,6 +5,9 @@ import {Image} from 'react-native';
 import HomeTab from './tabs/HomeTab';
 import Colors from '../../styles/theme/Colors';
 import SettingsTab from './tabs/SettingsTab';
+import CustomerTab from './tabs/CustomerTab';
+import TransactionTab from './tabs/TransactionTab';
+import AccountTab from './tabs/AccountTab';
 
 const Bottom = createBottomTabNavigator();
 
@@ -27,6 +30,9 @@ const BottomTabNavigator = () => {
         // tabBarInactiveBackgroundColor: 'white',
         // tabBarActiveTintColor: 'white',
         // tabBarInactiveTintColor: 'black',
+        tabBarStyle: {
+          height: 65,
+        },
         tabBarLabelStyle: {
           fontSize: 12,
         },
@@ -46,8 +52,8 @@ const BottomTabNavigator = () => {
         tabBarLabelPosition: 'below-icon',
       }}>
       <Bottom.Screen
-        name="Home"
-        component={HomeTab}
+        name="Transactions"
+        component={TransactionTab}
         options={{
           // headerShown: false,
           tabBarIcon: ({focused, color, size}) =>
@@ -55,7 +61,21 @@ const BottomTabNavigator = () => {
               size,
               color,
               focused,
-              img: require('../../assets/images/home64.png'),
+              img: require('../../assets/images/rupee.png'),
+            }),
+        }}
+      />
+      <Bottom.Screen
+        name="Accounts"
+        component={AccountTab}
+        options={{
+          // headerShown: false,
+          tabBarIcon: ({focused, color, size}) =>
+            TabIcon({
+              size,
+              color,
+              focused,
+              img: require('../../assets/images/list.png'),
             }),
         }}
       />
