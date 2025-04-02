@@ -9,11 +9,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
-import axios from 'axios';
 import AuthService from '../../services/authService';
 
 const LoginScreen = () => {
@@ -64,7 +64,7 @@ const LoginScreen = () => {
   };
 
   const handleForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
+    // navigation.navigate('ForgotPassword');
   };
 
   const handleSignUp = () => {
@@ -77,6 +77,7 @@ const LoginScreen = () => {
       style={styles.container}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}>
+      <StatusBar backgroundColor="#4A90E2" barStyle="light-content" />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{flex: 1}}>

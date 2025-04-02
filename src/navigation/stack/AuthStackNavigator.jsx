@@ -1,12 +1,10 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from '../../screens/HomeScreen';
-import PostsScreen from '../../screens/Post/PostsScreen';
-import AddPostScreen from '../../screens/Post/AddPostScreen';
-import EditPostScreen from '../../screens/Post/EditPostScreen';
-import TrashedScreen from '../../screens/Post/TrashedScreen';
 import LoginScreen from '../../screens/Auth/LoginScreen';
 import RegisterScreen from '../../screens/Auth/RegisterScreen';
+import LoginScreen2 from '../../screens/Auth/LoginScreen2';
+import RegisterScreen2 from '../../screens/Auth/RegisterScreen2';
 
 const Stack = createStackNavigator();
 
@@ -20,12 +18,12 @@ const AuthStackNavigator = () => {
       />
       <Stack.Screen
         name="Login"
-        component={LoginScreen}
+        component={LoginScreen2}
         options={{title: 'Login'}}
       />
       <Stack.Screen
         name="Register"
-        component={RegisterScreen}
+        component={RegisterScreen2}
         options={{title: 'Register'}}
       />
     </Stack.Navigator>

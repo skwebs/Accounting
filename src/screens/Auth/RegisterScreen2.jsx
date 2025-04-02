@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import {useForm, Controller} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import AuthService from '../../services/authService';
+// import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Define validation schema with Zod
 const registerSchema = z
@@ -33,8 +34,10 @@ const registerSchema = z
     path: ['confirmPassword'],
   });
 
-const RegisterScreen = () => {
+const RegisterScreen2 = () => {
   const navigation = useNavigation();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     control,
@@ -53,6 +56,7 @@ const RegisterScreen = () => {
   const onSubmit = async data => {
     try {
       const response = await AuthService.register(data);
+      console.log('response', response);
       if (response.status === 201) {
         Snackbar.show({
           text: 'Registration successful! Please login.',
@@ -82,6 +86,10 @@ const RegisterScreen = () => {
   const handleLogin = () => {
     navigation.navigate('Login');
   };
+
+  const toggleShowPassword = () => setShowPassword(!showPassword);
+  const toggleShowConfirmPassword = () =>
+    setShowConfirmPassword(!showConfirmPassword);
 
   return (
     <LinearGradient
@@ -151,21 +159,36 @@ const RegisterScreen = () => {
               )}
             />
 
-            {/* Password Input */}
+            {/* Password Input with Toggle */}
             <Controller
               control={control}
               name="password"
               render={({field: {onChange, onBlur, value}}) => (
                 <View style={styles.inputContainer}>
-                  <TextInput
-                    style={[styles.input, errors.password && styles.inputError]}
-                    placeholder="Password"
-                    placeholderTextColor="#A9A9A9"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    secureTextEntry
-                  />
+                  <View style={styles.passwordInputContainer}>
+                    <TextInput
+                      style={[
+                        styles.passwordInput,
+                        errors.password && styles.inputError,
+                      ]}
+                      placeholder="Password"
+                      placeholderTextColor="#A9A9A9"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      secureTextEntry={!showPassword}
+                    />
+                    <TouchableOpacity
+                      style={styles.eyeIcon}
+                      onPress={toggleShowPassword}>
+                      {/* <Icon
+                        name={showPassword ? 'visibility-off' : 'visibility'}
+                        size={24}
+                        color="#A9A9A9"
+                      /> */}
+                      <Text>{showPassword ? 'Hide' : 'Show'}</Text>
+                    </TouchableOpacity>
+                  </View>
                   {errors.password && (
                     <Text style={styles.errorText}>
                       {errors.password.message}
@@ -175,24 +198,38 @@ const RegisterScreen = () => {
               )}
             />
 
-            {/* Confirm Password Input */}
+            {/* Confirm Password Input with Toggle */}
             <Controller
               control={control}
               name="confirmPassword"
               render={({field: {onChange, onBlur, value}}) => (
                 <View style={styles.inputContainer}>
-                  <TextInput
-                    style={[
-                      styles.input,
-                      errors.confirmPassword && styles.inputError,
-                    ]}
-                    placeholder="Confirm Password"
-                    placeholderTextColor="#A9A9A9"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    secureTextEntry
-                  />
+                  <View style={styles.passwordInputContainer}>
+                    <TextInput
+                      style={[
+                        styles.passwordInput,
+                        errors.confirmPassword && styles.inputError,
+                      ]}
+                      placeholder="Confirm Password"
+                      placeholderTextColor="#A9A9A9"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      secureTextEntry={!showConfirmPassword}
+                    />
+                    <TouchableOpacity
+                      style={styles.eyeIcon}
+                      onPress={toggleShowConfirmPassword}>
+                      {/* <Icon
+                        name={
+                          showConfirmPassword ? 'visibility-off' : 'visibility'
+                        }
+                        size={24}
+                        color="#A9A9A9"
+                      /> */}
+                      <Text>{showConfirmPassword ? 'Hide' : 'Show'}</Text>
+                    </TouchableOpacity>
+                  </View>
                   {errors.confirmPassword && (
                     <Text style={styles.errorText}>
                       {errors.confirmPassword.message}
@@ -226,7 +263,6 @@ const RegisterScreen = () => {
   );
 };
 
-// Reuse the same styles from LoginScreen2 with minor adjustments
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -270,6 +306,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
+  passwordInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 25,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    fontSize: 16,
+    color: '#333',
+  },
+  eyeIcon: {
+    paddingRight: 15,
+  },
   inputError: {
     borderWidth: 1,
     borderColor: '#FF6B6B',
@@ -311,4 +363,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
+export default RegisterScreen2;

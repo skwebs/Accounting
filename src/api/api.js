@@ -26,6 +26,7 @@ axiosInstance.interceptors.request.use(
     const isConnected = await isInternetAvailable();
 
     if (!isConnected) {
+      console.log('No internet connection.');
       return Promise.reject({
         type: 'network',
         message: 'No internet connection. Please check your network.',
@@ -56,21 +57,31 @@ axiosInstance.interceptors.response.use(
           return Promise.reject({
             type: 'bad_request',
             message: data.message || 'Bad Request.',
+            status: status,
           });
 
         case 401:
+          console.log('auth: ', 'Unauthorized. Please log in again.');
           return Promise.reject({
             type: 'auth',
             message: 'Unauthorized. Please log in again.',
+            status: status,
           });
 
         case 403:
-          return Promise.reject({type: 'forbidden', message: 'Access denied.'});
+          console.log('forbidden: ', 'Access denied.');
+          return Promise.reject({
+            type: 'forbidden',
+            message: 'Access denied.',
+            status: status,
+          });
 
         case 404:
+          console.log('not_found: ', 'Resource not found.');
           return Promise.reject({
             type: 'not_found',
             message: 'Resource not found.',
+            status: status,
           });
 
         case 422:
@@ -78,24 +89,31 @@ axiosInstance.interceptors.response.use(
             type: 'validation',
             message: data.message,
             errors: data.errors,
+            status: status,
           });
 
         case 429:
+          console.log('rate_limit: ', 'Too many requests. Try later.');
           return Promise.reject({
             type: 'rate_limit',
             message: 'Too many requests. Try later.',
+            status: status,
           });
 
         case 500:
+          console.log('server: ', 'Internal server error');
           return Promise.reject({
             type: 'server',
             message: 'Internal server error. Please try again later.',
+            status: status,
           });
 
         default:
+          console.log('unknown', data.message);
           return Promise.reject({
             type: 'unknown',
             message: data.message || 'An unknown error occurred.',
+            status: status,
           });
       }
     }
@@ -109,13 +127,14 @@ axiosInstance.interceptors.response.use(
 
     if (error.message?.includes('Network Error') || !error.response) {
       console.log('Network Error:', error.message);
-      return Promise.reject({
-        type: 'network',
-        message: 'No internet connection.',
-      });
+      // return Promise.reject({
+      //   type: 'network',
+      //   message: 'No internet connection.',
+      // });
     }
 
     if (error.code === 'ECONNABORTED') {
+      console.log('ECONNABORTED: timeout');
       return Promise.reject({
         type: 'timeout',
         message: 'Request timeout. Try again later.',

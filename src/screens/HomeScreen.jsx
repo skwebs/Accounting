@@ -1,20 +1,3 @@
-// import {ImageBackground, StyleSheet, Text, View} from 'react-native';
-// import React from 'react';
-
-// const HomeScreen = () => {
-//   return (
-//     <ImageBackground
-//       style={{flex: 1}}
-//       source={require('../assets/images/background.jpg')}>
-//       <Text>HomeScreen</Text>
-//     </ImageBackground>
-//   );
-// };
-
-// export default HomeScreen;
-
-// const styles = StyleSheet.create({});
-
 import React from 'react';
 import {
   View,
@@ -24,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
+  StatusBar,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
@@ -45,11 +29,14 @@ const HomeScreen = () => {
       source={require('../assets/images/background.jpg')}
       style={styles.background}
       blurRadius={Platform.OS === 'ios' ? 4 : 2}>
+      <StatusBar barStyle="light-content" backgroundColor={'#130016'} />
+
       <LinearGradient
         colors={['rgba(0,0,0,0.7)', 'transparent']}
         style={styles.gradient}
         start={{x: 0, y: 0}}
         end={{x: 0, y: 1}}>
+        {/* <StatusBar backgroundColor="#4A90E2" barStyle="light-content" /> */}
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.title}>Welcome to</Text>

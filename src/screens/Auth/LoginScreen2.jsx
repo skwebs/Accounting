@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -9,62 +9,65 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
-import axios from 'axios';
+import {useForm, Controller} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {z} from 'zod';
 import AuthService from '../../services/authService';
 
+// Define validation schema with Zod
+const loginSchema = z.object({
+  email: z.string().email('Invalid email format').min(1, 'Email is required'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
 const LoginScreen2 = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
-  const handleLogin = async () => {
-    if (!email) {
-      Snackbar.show({
-        text: 'Please enter email ',
-        duration: Snackbar.LENGTH_SHORT,
-        backgroundColor: '#FF6B6B',
-      });
-      return;
-    } else if (!password) {
-      Snackbar.show({
-        text: 'Please enter password',
-        duration: Snackbar.LENGTH_SHORT,
-        backgroundColor: '#FF6B6B',
-      });
-      return;
-    }
-    console.log(email, password);
+  const {
+    control,
+    handleSubmit,
+    formState: {errors, isSubmitting},
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
-    setIsLoading(true);
+  const onSubmit = async data => {
     try {
-      const auth = await AuthService.login({email, password});
-      // const auth = await axios.post('http://192.168.1.6:8000/api/login', {
-      //   email,
-      //   password,
-      // });
-      if (auth.status === 200 && auth.data.token) {
-        Snackbar.show({
-          text: 'Logged in successfully',
-          duration: Snackbar.LENGTH_SHORT,
-          backgroundColor: '#4CAF50',
-        });
+      const response = await AuthService.login(data);
+      console.log('response', response);
+      if (response.status === 200) {
         navigation.navigate('Home');
       }
-      console.log(auth);
-      setIsLoading(false);
     } catch (error) {
-      console.log('Error logging in:', error);
-      setIsLoading(false);
+      if (error.type === 'network') {
+        Snackbar.show({
+          text: error.message || 'Network error',
+          duration: Snackbar.LENGTH_LONG,
+          backgroundColor: '#FF6B6B',
+        });
+        return;
+      }
+      console.log('Login failed:', error);
+      Snackbar.show({
+        text: error.message || 'Login failed',
+        duration: Snackbar.LENGTH_LONG,
+        backgroundColor: '#FF6B6B',
+      });
     }
   };
 
   const handleForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
+    // navigation.navigate('ForgotPassword');
   };
 
   const handleSignUp = () => {
@@ -77,6 +80,7 @@ const LoginScreen2 = () => {
       style={styles.container}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}>
+      <StatusBar backgroundColor="#4A90E2" barStyle="light-content" />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{flex: 1}}>
@@ -85,7 +89,7 @@ const LoginScreen2 = () => {
           keyboardShouldPersistTaps="handled">
           <View style={styles.logoContainer}>
             <Image
-              source={require('../../assets/images/lock.png')} // Replace with your logo
+              source={require('../../assets/images/lock.png')}
               style={styles.logo}
             />
             <Text style={styles.appName}>Welcome Back</Text>
@@ -93,22 +97,51 @@ const LoginScreen2 = () => {
           </View>
 
           <View style={styles.formContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor="#A9A9A9"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
+            {/* Email Input */}
+            <Controller
+              control={control}
+              name="email"
+              render={({field: {onChange, onBlur, value}}) => (
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, errors.email && styles.inputError]}
+                    placeholder="Email"
+                    placeholderTextColor="#A9A9A9"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                  {errors.email && (
+                    <Text style={styles.errorText}>{errors.email.message}</Text>
+                  )}
+                </View>
+              )}
             />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor="#A9A9A9"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
+
+            {/* Password Input */}
+            <Controller
+              control={control}
+              name="password"
+              render={({field: {onChange, onBlur, value}}) => (
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={[styles.input, errors.password && styles.inputError]}
+                    placeholder="Password"
+                    placeholderTextColor="#A9A9A9"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    secureTextEntry
+                  />
+                  {errors.password && (
+                    <Text style={styles.errorText}>
+                      {errors.password.message}
+                    </Text>
+                  )}
+                </View>
+              )}
             />
 
             <TouchableOpacity onPress={handleForgotPassword}>
@@ -117,11 +150,13 @@ const LoginScreen2 = () => {
 
             <TouchableOpacity
               style={styles.loginButton}
-              onPress={handleLogin}
-              disabled={isLoading}>
-              <Text style={styles.loginButtonText}>
-                {isLoading ? 'Logging in...' : 'Login'}
-              </Text>
+              onPress={handleSubmit(onSubmit)}
+              disabled={isSubmitting}>
+              {isSubmitting ? (
+                <ActivityIndicator color="#4A90E2" />
+              ) : (
+                <Text style={styles.loginButtonText}>Login</Text>
+              )}
             </TouchableOpacity>
 
             <View style={styles.signUpContainer}>
@@ -144,6 +179,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
+    paddingBottom: 20,
   },
   logoContainer: {
     alignItems: 'center',
@@ -168,14 +204,27 @@ const styles = StyleSheet.create({
   formContainer: {
     paddingHorizontal: 30,
   },
+  inputContainer: {
+    marginBottom: 15,
+  },
   input: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 25,
     paddingHorizontal: 20,
     paddingVertical: 15,
-    marginBottom: 15,
+    // marginBottom: 5,
     fontSize: 16,
     color: '#333',
+  },
+  inputError: {
+    borderWidth: 1,
+    borderColor: '#FF6B6B',
+  },
+  errorText: {
+    color: '#FF6B6B',
+    marginBottom: 10,
+    marginLeft: 15,
+    fontSize: 12,
   },
   forgotPassword: {
     color: '#FFF',
