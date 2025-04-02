@@ -19,6 +19,7 @@ import {useForm, Controller} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import AuthService from '../../services/authService';
+import useAuthStore from '../../store/authStoreJs';
 // import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Define validation schema with Zod
@@ -53,11 +54,14 @@ const RegisterScreen2 = () => {
     },
   });
 
+  const {register} = useAuthStore();
+
   const onSubmit = async data => {
     try {
       const response = await AuthService.register(data);
       console.log('response', response);
       if (response.status === 201) {
+        register(response.data.user, response.data.token); // Update Zustand store
         Snackbar.show({
           text: 'Registration successful! Please login.',
           duration: Snackbar.LENGTH_LONG,

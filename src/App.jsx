@@ -33,8 +33,10 @@ import {StatusBar, Platform} from 'react-native';
 import BottomTabNavigator from './navigation/bottom-tab/BottomTabNavigator';
 import StackNavigator from './navigation/stack/StackNavigator';
 import AuthStackNavigator from './navigation/stack/AuthStackNavigator';
+import useAuthStore from './store/authStoreJs';
 
 const App = () => {
+  const {isAuthenticated} = useAuthStore();
   useEffect(() => {
     listenForNetworkChanges(); // Start network status monitoring
 
@@ -53,7 +55,7 @@ const App = () => {
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <NavigationContainer>
         {/* Choose either StackNavigator or BottomTabNavigator, or conditionally render */}
-        <AuthStackNavigator />
+        {isAuthenticated ? <BottomTabNavigator /> : <AuthStackNavigator />}
         {/* <StackNavigator /> */}
         {/* <BottomTabNavigator /> */}
       </NavigationContainer>

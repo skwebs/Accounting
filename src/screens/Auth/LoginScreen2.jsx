@@ -20,6 +20,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import AuthService from '../../services/authService';
 
+import useAuthStore from './../../store/authStoreJs';
 // Define validation schema with Zod
 const loginSchema = z.object({
   email: z.string().email('Invalid email format').min(1, 'Email is required'),
@@ -41,11 +42,14 @@ const LoginScreen2 = () => {
     },
   });
 
+  const {login} = useAuthStore();
+
   const onSubmit = async data => {
     try {
       const response = await AuthService.login(data);
       console.log('response', response);
       if (response.status === 200) {
+        login(response.data.user, response.data.token); // Update Zustand store
         navigation.navigate('Home');
       }
     } catch (error) {
